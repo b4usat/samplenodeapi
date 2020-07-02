@@ -1,6 +1,6 @@
 const validators = require('./utlities')
 const errors = require('./errors')
-const db = require('./db')
+const dbMiddleware = require('./dbMiddleware')
 
 exports.newOrderMiddleware = {
     newOrderValidator: (req, res, next) => {
@@ -20,20 +20,21 @@ exports.newOrderMiddleware = {
     },
 
     addOrdertoDataBase: (req, res, next) => {
-        const order = req.body;
-        var result = db.insert(order)
-        if (result === 'success') {
-            res.status(200).json({
-                message: "Order created successfully"
-            });
-        } else {
-            res.status(500).json({
-                error: "Internal Server Error"
-            });
-        }
+        dbMiddleware.insertOrder(req).then(result => {
+            if (result) {
+                res.status(200).json({
+                    message: "Order created successfully"
+                });
+            }
+            else {
+                res.status(500).json({
+                    error: "Internal Server Error"
+                });
+            }
+        })
     },
 
-    
+
 
     sendAcknowledgement: (req, res, next) => {
 

@@ -1,5 +1,6 @@
 const express = require('express')
 const router = express.Router()
+const foodMiddleware = require('./foodMiddleware')
 const newOrderMid = require('./newOrderMiddleware').newOrderMiddleware
 
 
@@ -20,6 +21,8 @@ router.get("/weather/:state", (req, res) => {
 
 });
 
+router.get('/foodProducts',foodMiddleware.GetFoodProductsList, foodMiddleware.sendFoodResponse)
+router.get('/foodProductById',foodMiddleware.GetFoodProductById, foodMiddleware.sendFoodResponse)
 
 router.post('/new_order', newOrderMid.newOrderValidator, newOrderMid.addOrdertoDataBase)
 
